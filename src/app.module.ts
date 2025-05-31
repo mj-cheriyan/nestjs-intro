@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 
 @Module({
-  imports: [],
   controllers: [AppController],
   providers: [AppService],
 })
