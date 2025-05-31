@@ -1,35 +1,28 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
-
-interface CreateUserDto {
-  name: string;
-}
+import { Controller, Get, Post, Param, Query, Body } from '@nestjs/common';
+import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('users')
-export class UserController {
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
   @Get()
   getAllUsers() {
-    return [
-      { id: 1, name: 'Alice' },
-      { id: 2, name: 'Bob' },
-    ];
+    return this.usersService.findAll();
   }
 
   @Get(':id')
-  getUser(@Param('id') id: string) {
-    const users = [
-      { id: 1, name: 'Alice' },
-      { id: 2, name: 'Bob' },
-    ];
-    return users.find((user) => user.id.toString() === id) || {};
+  getUserById(@Param('id') id: string) {
+    return this.usersService.findById(+id);
   }
 
   @Post()
-  saveUser(@Body() body: CreateUserDto) {
-    return { message: 'User created', data: { name: 'John Doe' } };
+  createUser(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
   }
 
-  @Get('/search')
-  searchUserByRole(@Query('role') role: string) {
-    return { role: 'admin' };
+  @Get('search')
+  findByRole(@Query('role') role: string) {
+    return this.usersService.findByRole(role);
   }
 }
